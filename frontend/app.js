@@ -1,20 +1,20 @@
-mapboxgl.accessToken = "sk.eyJ1IjoicG9saWduYW5vZ28iLCJhIjoiY21sdzBuMmpsMGN5czNscXNwYWt2M2FmZiJ9._QTnlfiDIDacYcJXXFOG2w";
-
-const map = new mapboxgl.Map({
-  container: "map",
-  style: "mapbox://styles/mapbox/streets-v11",
-  center: [17.2205, 40.9959],
-  zoom: 14
-});
+let map;
 
 fetch("/config")
   .then(res => res.json())
   .then(config => {
-    mapboxgl.accessToken = config.mapboxToken;
-    // inizializza mappa qui
-  });
 
-fetch("/api/places")
+    mapboxgl.accessToken = config.mapboxToken;
+
+    map = new mapboxgl.Map({
+      container: "map",
+      style: "mapbox://styles/mapbox/streets-v11",
+      center: [17.2205, 40.9959], // Polignano
+      zoom: 14
+    });
+
+    return fetch("/api/places");
+  })
   .then(res => res.json())
   .then(places => {
     places.forEach(p => {
@@ -23,4 +23,7 @@ fetch("/api/places")
         .setPopup(new mapboxgl.Popup().setText(p.name))
         .addTo(map);
     });
+  })
+  .catch(err => {
+    console.error("Errore inizializzazione:", err);
   });
