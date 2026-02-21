@@ -7,6 +7,13 @@ const map = new mapboxgl.Map({
   zoom: 14
 });
 
+fetch("/config")
+  .then(res => res.json())
+  .then(config => {
+    mapboxgl.accessToken = config.mapboxToken;
+    // inizializza mappa qui
+  });
+
 fetch("/api/places")
   .then(res => res.json())
   .then(places => {
