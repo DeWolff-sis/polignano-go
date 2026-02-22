@@ -18,7 +18,7 @@ app.use("/api/places", placesRoutes);
 app.get("/config", (req, res) => {
   try {
     res.json({
-      mapboxToken: process.env.sk.eyJ1IjoicG9saWduYW5vZ28iLCJhIjoiY21sdzBuMmpsMGN5czNscXNwYWt2M2FmZiJ9._QTnlfiDIDacYcJXXFOG2w || null
+      mapboxToken: process.env.pk.eyJ1IjoicG9saWduYW5vZ28iLCJhIjoiY21sdzBiOTluMGMwbjNmcXFjNmZiOWtoZyJ9.D4btyisncrM0SyiWBbwDpg || null
     });
   } catch (err) {
     console.error("Errore /config:", err);
