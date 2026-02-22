@@ -8,30 +8,40 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Gestione __dirname in ES module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Servire frontend statico
-app.use(express.static(path.join(__dirname, "../../frontend")));
+// ----- API -----
 
-// Endpoint API
 app.use("/api/places", placesRoutes);
 
-// Endpoint per fornire il token Mapbox al frontend
 app.get("/config", (req, res) => {
-  res.json({
-    mapboxToken: process.env.sk.eyJ1IjoicG9saWduYW5vZ28iLCJhIjoiY21sdzBuMmpsMGN5czNscXNwYWt2M2FmZiJ9._QTnlfiDIDacYcJXXFOG2w
-  });
+  try {
+    res.json({
+      mapboxToken: process.env.sk.eyJ1IjoicG9saWduYW5vZ28iLCJhIjoiY21sdzBuMmpsMGN5czNscXNwYWt2M2FmZiJ9._QTnlfiDIDacYcJXXFOG2w || null
+    });
+  } catch (err) {
+    console.error("Errore /config:", err);
+    res.status(500).json({ error: "Config error" });
+  }
 });
 
-// Root → index.html
-app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "../../frontend/index.html"));
+// ----- STATIC -----
+
+const frontendPath = path.join(__dirname, "../../frontend");
+app.use(express.static(frontendPath));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(frontendPath, "index.html"));
 });
+
+// ----- START -----
 
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+
+
